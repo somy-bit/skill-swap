@@ -67,3 +67,35 @@ export const listenToNotifications =(userId: string, callback: (notifs: any[]) =
 
   return unsubscribe;
 }
+
+export const generateZoomAuthUrl=(state?: string)=>{
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id: process.env.ZOOM_CLIENT_ID!,
+    redirect_uri: process.env.ZOOM_REDIRECT_URL!,
+  });
+  if (state) params.append('state', state);
+  return `https://zoom.us/oauth/authorize?${params.toString()}`;
+}
+
+export const refreshZoomTokens=async(refreshToken: string)=>{
+
+    const basicAuth = Buffer.from(`${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_CLIENT_SECRET}`).toString('base64');
+  const res = await fetch('https://zoom.us/oauth/token', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    }),
+  });
+
+  if (!res.ok) return null;
+  console.log('couldnt refresh the zoom token')
+  return await res.json();
+
+}
+

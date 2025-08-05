@@ -90,7 +90,7 @@ function ProfileCard({ profile, canEdit }: { profile: Profile, canEdit: boolean 
             <div className='flex flex-row items-center gap-3 justify-center py-6 flex-wrap mx-8'>
               {profile.skills.map((skill, index) => (
                 <div
-                  className='flex justify-center items-center max-w-36 p-2 shadow-lg bg-white overflow-hidden rounded-lg  dark:bg-gray-900'
+                  className='flex justify-center items-center  p-2 h-12 shadow-lg bg-white overflow-hidden rounded-lg  dark:bg-gray-900'
                   key={index}>
                   #{skill}
                 </div>

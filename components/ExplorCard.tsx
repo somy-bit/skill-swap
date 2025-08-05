@@ -13,6 +13,9 @@ interface ExploreCardProps {
 
 }
 
+const MAX_SKILLS = 3;
+const MAX_STR_LENGTH = 12;
+
 const ExploreCard: React.FC<ExploreCardProps> = ({
   name,
   avatar,
@@ -49,9 +52,9 @@ const ExploreCard: React.FC<ExploreCardProps> = ({
         <div className="px-4  flex-1  text-xs dark:text-gray-100 line-clamp-1 text-center text-gray-500">{bio.substring(0, 30)}</div>
 
         <div className="px-4 pb-4  text-xs text-gray-800 dark:text-white font-medium">
-          {skills.map((skill, i) => (
+          {skills.slice(0,MAX_SKILLS).map((skill, i) => (
             <span key={i} className="inline-block mr-2 p-2 hover:shadow-lg rounded border dark:border-gray-600 border-gray-50 shadow-md">
-              #{skill}
+              #{skill.length > MAX_STR_LENGTH ? skill.slice(0,MAX_STR_LENGTH)+'...' : skill}
             </span>
           ))}
         </div>

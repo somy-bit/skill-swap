@@ -1,11 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 
-export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+
+export default async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
 
   if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return NextResponse.json({ error: 'Unauthorized' });
   }
 
   try {
@@ -24,9 +25,9 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     const { token } = await response.json(); // Clerk returns { token: string }
     console.log('token firebase',token)
-    return res.status(200).json({ token });
+    return NextResponse.json(token ,{status:200});
   } catch (err) {
     console.error('Error fetching Firebase token from Clerk:', err);
-    return res.status(500).json({ error: 'Failed to get Firebase token' });
+    return NextResponse.json({ error: 'Failed to get Firebase token' });
   }
 }

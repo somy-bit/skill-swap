@@ -1,7 +1,7 @@
 //handle avalability changes and updates// app/api/availability/route.ts
-import { db } from '@/lib/firebase';import { getAuth } from '@clerk/nextjs/server'; // Or use your Firebase auth logic
+import { getAuth } from '@clerk/nextjs/server'; // Or use your Firebase auth logic
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, doc, getDocs, addDoc, query, where } from 'firebase/firestore';
+
 import { adminDb } from '@/lib/firebaseAdmin';
 
 export async function GET(req: NextRequest) {

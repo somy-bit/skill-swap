@@ -16,7 +16,7 @@ type SessionDoc = {
   id: string
 }
 
-export async function GET(req :NextRequest) {
+export async function GET() {
   try {
     const { userId } = await auth(); // Auth helper from Clerk
     if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

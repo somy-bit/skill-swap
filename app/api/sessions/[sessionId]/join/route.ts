@@ -4,11 +4,11 @@ import { Session } from "@/types/type";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest, { params }: { params: { sessionId: string } }) {
+export async function POST(req: NextRequest,context:any) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const sessionId =  params.sessionId;
+  const {sessionId} =  context.params;
   const sessionRef = adminDb.collection("sessions").doc(sessionId);
   const sessionSnap = await sessionRef.get();
 

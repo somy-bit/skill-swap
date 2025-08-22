@@ -4,8 +4,8 @@ import { adminDb } from '@/lib/firebaseAdmin'
 
 
 
-export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
-  const { userId } = params
+export async function GET(req: NextRequest, context:any) {
+  const { userId } = context.params
 
   try {
     const snapshot = await adminDb

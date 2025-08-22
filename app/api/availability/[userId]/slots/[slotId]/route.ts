@@ -3,7 +3,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { deleteDoc, doc } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(req:NextRequest,{params}:{params:{slotId:string}}){
+export async function DELETE(req:NextRequest,context:any) {
 
 
   try{
@@ -13,7 +13,7 @@ export async function DELETE(req:NextRequest,{params}:{params:{slotId:string}}){
       return NextResponse.json({error:"not authorized"},{status:401})
     }
 
-    const {slotId} = params;
+    const {slotId} = context.params;
     const slotRef = adminDb
       .collection("availability")
       .doc(userId)

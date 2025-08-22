@@ -37,10 +37,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 // }
 
-export async function POST(req: NextRequest, { params }: { params: { sessionId: string } }) {
+export async function POST(req: NextRequest, context:any) {
 
     const { userId } = await auth();
-    const sessionId = params.sessionId;
+    const {sessionId} = context.params;
     const body = await req.json();
     const { menteeId } = body;
     if (!userId)
@@ -154,7 +154,7 @@ export async function POST(req: NextRequest, { params }: { params: { sessionId: 
 
 ///patch 
 
-export async function PATCH(req: NextRequest, { params }: { params: { sessionId: string } }) {
+export async function PATCH(req: NextRequest, context:any) {
 
     const { userId } = await auth();
     try {
@@ -163,7 +163,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { sessionId:
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { sessionId } = params;
+        const { sessionId } = context.params;
         const body = await req.json();
         const action = body.action;
         console.log('cancel session')
@@ -236,9 +236,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { sessionId:
 }
 
 //delete a session
-export async function DELETE(req: Request, { params }: { params: { sessionId: string } }) {
+export async function DELETE(req: Request, context:any) {
   const { userId } =await  auth();
-  let id = await params.sessionId;
+  const id = await context.params.sessionId;
   console.log('delete sesion api')
   if (!userId) return new NextResponse("Unauthorized", { status: 401 });
   

@@ -1,24 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 
+console.log("✅ Availability route loaded");
 
-
-export async function GET(req: NextRequest, context: { params: { userId: string } }) {
+export async function GET(req: NextRequest,  { params }: { params: { userId: string } }) {
 
   const today = new Date().toISOString().split('T')[0];
 
+
   try {
-    const { userId } = context.params;
+    const { userId } = params;
     console.log('userid from slot api', userId)
     const snapshot = await adminDb
       .collection('availability')
       .doc(userId)
       .collection('slots')
-      .orderBy('date', 'asc')
       .where('date', '>=', today)
+      .orderBy('date', 'asc')
       .get();
 
-      console.log('slots dates:',today)
+    console.log('slots dates:', today)
 
     const slots: { [date: string]: [string, string][] } = {};
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactElement, useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import BookingCalendar from '@/components/BookingCalendar';
 import { useSearchParams } from 'next/navigation';
@@ -14,6 +14,8 @@ type SlotsByDate = { [date: string]: [string, string][] };
 
 export default function BookPage() {
 
+
+
   const { userId } = useParams() as { userId: string };
   const [availableSlots, setAvailableSlots] = useState<SlotsByDate>({});
   const searchParams = useSearchParams();
@@ -22,7 +24,7 @@ export default function BookPage() {
   const [isBooking,setIsBooking] = useState(false);
   const mentorId :string =searchParams.get('id') as string;
 
-
+  console.log('usrId...',userId)
   const{user} = useUser()
 
   const [selectedSkill, setSelectedSkill] = useState('');

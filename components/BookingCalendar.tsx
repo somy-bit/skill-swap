@@ -58,7 +58,7 @@ export default function BookingCalendar({ availableSlots, onSlotSelect }: Calend
 
   const handleDateClick = (date: Date) => {
     const dateStr = date.toLocaleDateString('en-CA');
-    console.log('available slotsa', availableSlots)
+    console.log('available slots', availableSlots)
     if (availableSlots[dateStr] && availableSlots[dateStr].length > 0) {
       setSelectedDate(dateStr);
     

@@ -1,18 +1,46 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ExploreCard from '@/components/ExplorCard';
 import { useSaveUser } from '@/hooks/saveUser';
 import { useProfile } from '@/hooks/getProfiles';
+import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 
 
 function Dashboard() {
+
+    const { userId, isLoaded } = useAuth();
+    const router = useRouter();
 
     const { saved, loading, error } = useSaveUser()
 
     const [filter, setFilter] = useState('');
     const { profiles, loadingProf, hasMore, loadProfiles } = useProfile(filter)
 
+    useEffect(() => {
+
+        if (!isLoaded)
+            return;
+        const checkProfile = async () => {
+            if (!userId) {
+                router.push("/sign-in"); // No auth → send to sign in
+                return;
+            }
+
+            const res = await fetch(`/api/profile/${userId}`);
+            const profile = await res.json();
+           
+
+            if (!profile) {
+                router.push("/dashboard/profile/edit"); // No profile → send to edit
+            }
+
+
+        }
+        checkProfile();
+
+    }, [isLoaded,userId,router])
 
 
 

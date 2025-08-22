@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
+    console.log('getting all profiles')
     const snapshot = await adminDb.collection('profiles').get();
 
     const profiles = snapshot.docs.map(doc => ({

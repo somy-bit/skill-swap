@@ -1,7 +1,5 @@
 
 import { adminDb } from "@/lib/firebaseAdmin";
-
-import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
 

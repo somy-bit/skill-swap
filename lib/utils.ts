@@ -1,8 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, where } from "firebase/firestore";
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -23,6 +24,8 @@ export async function getUserFromFirestore(userId: string) {
 
 
 export const isEndTimeAfterStart = (startTime: string, endTime: string): boolean => {
+
+  
 
   const toMinute = (timeStr: string): number => {
 
@@ -55,10 +58,11 @@ export const isEndTimeAfterStart = (startTime: string, endTime: string): boolean
 
 
 export const listenToNotifications =(userId: string, callback: (notifs: any[]) => void) =>{
-  const q = query(
-    collection(db, `notifications/${userId}/items`),
-    orderBy('timestamp', 'desc') // optional, to show latest first
-  );
+ const q = query(
+  collection(db, `notifications/${userId}/items`),
+  where('seen', '==', false),   // only unseen notifications
+  orderBy('timestamp', 'desc')  // latest first
+)
 
   const unsubscribe = onSnapshot(q, snapshot => {
     const notifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

@@ -102,7 +102,7 @@ export default function Availability() {
         }
     };
 
-  
+  //mark all slots on the calendar and show booked slots
 
     return (
         <div className='grid grid-cols-1 lg:grid-cols-2'>

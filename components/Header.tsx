@@ -43,7 +43,7 @@ function Header() {
                         <button onClick={() => { router.replace('/dashboard'); setOpenMenu(false); }} className="hover:text-indigo-300 cursor-pointer text-xl font-semibold transition ease-out">Home</button>
                         <button onClick={() => { router.replace('/dashboard/sessions'); setOpenMenu(false) }} className="hover:text-indigo-300 cursor-pointer text-xl font-semibold transition ease-out">Sessions</button>
                         <button onClick={() => { router.replace(`dashboard/profile/${user?.id}`); setOpenMenu(false) }} className="hover:text-indigo-300 cursor-pointer text-xl font-semibold transition ease-out">Profile</button>
-                        <button onClick={() => { router.replace('dashboard/messages'); setOpenMenu(false) }} className="hover:text-indigo-300 cursor-pointer text-xl font-semibold transition ease-out">Messages</button>
+                        <button onClick={() => { router.replace('dashboard/notifications'); setOpenMenu(false) }} className="hover:text-indigo-300 cursor-pointer text-xl font-semibold transition ease-out">Notifications</button>
                         <button onClick={() => { router.replace('/dashboard/schedule'); setOpenMenu(false); }} className="hover:text-indigo-300 cursor-pointer text-xl font-semibold transition ease-out">Schedule</button>
                     </nav>
                 </div>

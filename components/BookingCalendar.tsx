@@ -104,6 +104,11 @@ export default function BookingCalendar({ availableSlots, onSlotSelect }: Calend
           );
         })}
       </div>
+      {
+        Object.keys(availableSlots).length === 0 &&(
+          <p className='mt-10 text-sm font-semibold text-red-500'>There is no availability yet..</p>
+        )
+      }
 
       {selectedDate && (
         <div className="mt-4 space-y-2">

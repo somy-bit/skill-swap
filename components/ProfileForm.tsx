@@ -23,6 +23,8 @@ function ProfileForm({ profile }: { profile: Profile }) {
 
     const [role, setRole] = useState(profile?.isMentor ? "mentor" : "mentee");
     const [bio, setBio] = useState(profile.bio);
+    const [name, setName] = useState(profile.name);
+
     const [skills, setSkills] = useState(profile.skills.join(','));
     const [skillsNeed, setSkillsNeed] = useState(profile.skillsNeed.join(','));
 
@@ -41,12 +43,24 @@ function ProfileForm({ profile }: { profile: Profile }) {
         }
     };
 
-  
+
 
     //handle submit form save profile to db
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!user?.id) return;
+
+        if (
+            !name.trim() ||
+            !bio.trim() ||
+            !skills.trim() ||
+            !skillsNeed.trim() ||
+            !role.trim()
+        ) {
+            toast.error("Please fill out all required fields before saving.");
+            return;
+        }
+
 
         try {
             setLOading(true);
@@ -59,11 +73,11 @@ function ProfileForm({ profile }: { profile: Profile }) {
             }
 
             const updateProfile: Profile = {
-                name: user.fullName ?? '',
+                name: name.trim(),
                 email: user.emailAddresses[0]?.emailAddress ?? '',
                 userId: user.id,
                 avatar: avatarURL,
-                bio,
+                bio:bio.trim(),
                 skills: skills.split(",").map(s => s.trim()),
                 skillsNeed: skillsNeed.split(",").map(s => s.trim()),
                 isMentor: role === "mentor",
@@ -71,7 +85,7 @@ function ProfileForm({ profile }: { profile: Profile }) {
                 field: "Technology"
             };
 
-            const res = await fetch("/api/profile", {
+            const res = await fetch(`/api/profile/${user.id}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updateProfile),
@@ -96,7 +110,7 @@ function ProfileForm({ profile }: { profile: Profile }) {
             <Loading show={loading} />
 
             <main className="max-w-xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-8">Welcome, {user?.firstName}!</h1>
+                <h1 className="text-2xl font-bold mb-8">Welcome, {user?.firstName || profile.name || "Dear user"}!</h1>
                 <form onSubmit={handleSubmit} className="space-y-8 flex flex-col">
                     <div className="flex flex-row items-center justify-between py-1 pr-12">
                         <label className="block px-3 py-1 bg-black/90 text-white hover:bg-gray-900 transition-all ease-in rounded ">
@@ -112,6 +126,18 @@ function ProfileForm({ profile }: { profile: Profile }) {
                             <AvatarFallback>user</AvatarFallback>
                         </Avatar>
 
+                    </div>
+                    <div>
+                        <label className="block font-semibold">Name</label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full border-2 p-2 border-indigo-400 dark:border-gray-400 rounded transition-all ease-in duration-150 focus:scale-105 focus:shadow-lg
+                             focus:shadow-indigo-300 dark:focus:shadow-gray-500 dark:focus:outline-none focus:outline-indigo-300"
+                            placeholder="Enter your name.."
+
+                        />
                     </div>
 
                     <div>
@@ -163,7 +189,7 @@ function ProfileForm({ profile }: { profile: Profile }) {
                             placeholder="e.g. React, Node.js, Design"
                         />
                     </div>
-                 
+
 
 
                     <button
@@ -173,10 +199,10 @@ function ProfileForm({ profile }: { profile: Profile }) {
                         Save & Continue
                     </button>
                 </form>
-             
+
             </main>
 
-                           
+
         </>
 
 

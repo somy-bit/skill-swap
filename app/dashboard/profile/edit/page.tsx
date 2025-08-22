@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import ProfileForm from "@/components/ProfileForm";
 import Loading from "@/components/Loading";
-import { toast } from "react-toastify";
 import { Profile } from "@/types/type";
 
 const Page = () => {
@@ -21,7 +20,7 @@ const Page = () => {
 
         const fetchProfile = async () => {
             try {
-                const res = await fetch("/api/profile");
+                const res = await fetch(`/api/profile/${user.id}`);
                
 
                 if (!res.ok) {

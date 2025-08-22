@@ -7,9 +7,28 @@ import Link from 'next/link';
 
 
 
-export default function SessionCard({ sessions, isMentor,handleConfirm,handleCancel,sendMessage }: 
-  { sessions: SessionWithProfile, isMentor: boolean,handleConfirm:(id:string,menteeId:string)=>void ,handleCancel :(id:string)=>void ,sendMessage:(id:string)=>void}) {
+export default function SessionCard({ sessions, isMentor, handleDeleteSession, handleConfirm, handleCancel, sendMessage }:
+  {
+    sessions: SessionWithProfile, isMentor: boolean, handleConfirm: (id: string, menteeId: string) => void
+    , handleDeleteSession: (id: string) => void
+    , handleCancel: (id: string) => void, sendMessage: (id: string) => void
+  }) {
 
+
+  const joinSesstion = async (id: string, zoomUrl: string | undefined) => {
+
+    window.open(zoomUrl, "_blank");
+
+    try {
+      const res = await fetch(`/api/sessions/${id}/join`, { method: "POST" });
+      if (!res.ok) {
+        console.error("Failed to mark session as joined");
+      }
+    } catch (error) {
+      console.error("Error marking session as joined", error);
+    }
+
+  }
 
 
   return (
@@ -19,6 +38,8 @@ export default function SessionCard({ sessions, isMentor,handleConfirm,handleCan
       <Card className="mb-6">
         <CardContent className="p-4 space-y-2">
           <p><strong>Date:</strong> {sessions.date}</p>
+          <p><strong>Mentoring :</strong> {sessions.skill}</p>
+
           <p><strong>Time:</strong> {sessions.startTime} - {sessions.endTime}</p>
           <p>
             <strong>Status:</strong>{' '}
@@ -35,9 +56,11 @@ export default function SessionCard({ sessions, isMentor,handleConfirm,handleCan
           {sessions.status === 'confirmed' && (
             <p>
               <strong>Meeting:</strong>{' '}
-              <a href={isMentor?sessions.zoom?.startUrl:sessions.zoom?.joinUrl} target="_blank" className="text-blue-500 underline">
+              <button
+                onClick={() => joinSesstion(sessions.id, isMentor ? sessions.zoom?.startUrl : sessions.zoom?.joinUrl)}>
+
                 Join sessions
-              </a>
+              </button>
             </p>
           )}
           {sessions.message && (
@@ -99,24 +122,36 @@ export default function SessionCard({ sessions, isMentor,handleConfirm,handleCan
 
       <div className="flex flex-col sm:flex-row gap-3">
         {sessions.status === 'confirmed' && (
-          <Button asChild>
-            <a href={isMentor?sessions.zoom?.startUrl:sessions.zoom?.joinUrl} target="_blank" rel="noopener noreferrer">
-              Join Session
-            </a>
+          <Button
+            className='cursor-pointer'
+            onClick={() => joinSesstion(sessions.id, isMentor ? sessions.zoom?.startUrl : sessions.zoom?.joinUrl)}>
+
+            Join Session
+
+          </Button>
+        )}
+        {sessions.status === 'cancelled' && (
+          <Button
+            className='cursor-pointer'
+            onClick={() => handleDeleteSession(sessions.id)}
+          >
+
+            Delete Session
+
           </Button>
         )}
         {(isMentor && sessions.status === 'pending') &&
-        <Button 
-        onClick={()=>handleConfirm(sessions.id,sessions.menteeId)}
-        className='bg-indigo-700 text-white cursor-pointer hover:bg-indigo-400 transition-all duration-150 ease-in-out'>Confirm</Button>
-        
+          <Button
+            onClick={() => handleConfirm(sessions.id, sessions.menteeId)}
+            className='bg-indigo-700 text-white cursor-pointer hover:bg-indigo-400 transition-all duration-150 ease-in-out'>Confirm</Button>
+
         }
-        <Button 
-        onClick={()=>handleCancel(sessions.id)}
-        className='cursor-pointer hover:bg-red-400 transition duration-150 ease-in-out' variant="destructive">Cancel</Button>
-        <Button 
-        onClick={()=>sendMessage(sessions.id)}
-        className='cursor-pointer hover:border-2 hover:border-indigo-900' variant="secondary">Message</Button>
+        <Button
+          onClick={() => handleCancel(sessions.id)}
+          className='cursor-pointer hover:bg-red-400 transition duration-150 ease-in-out' variant="destructive">Cancel</Button>
+        <Button
+          onClick={() => sendMessage(sessions.id)}
+          className='cursor-pointer hover:border-2 hover:border-indigo-900' variant="secondary">Message</Button>
       </div>
     </div>
   );

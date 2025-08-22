@@ -85,10 +85,11 @@ export type Message = {
 }
 
 export type Notification = {
-  type: 'booking' | 'message' | 'reminder',
+  type: 'booking' | 'message' | 'reminder' | 'session_confirmed' | 'session_cancelled' | 'session_completed',
   senderId: string,
   message: string,
   timestamp: Timestamp,
-  read: boolean,
+  seen: boolean,
   linkTo?: string, // e.g., sessionId or message thread
+  id?: string,
 }

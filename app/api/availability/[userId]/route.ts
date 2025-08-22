@@ -3,12 +3,12 @@ import { adminDb } from '@/lib/firebaseAdmin';
 
 
 
-export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(req: NextRequest, context: { params: { userId: string } }) {
 
   const today = new Date().toISOString().split('T')[0];
 
   try {
-    const { userId } = params;
+    const { userId } = context.params;
     console.log('userid from slot api', userId)
     const snapshot = await adminDb
       .collection('availability')

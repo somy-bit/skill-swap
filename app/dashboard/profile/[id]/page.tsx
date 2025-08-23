@@ -1,33 +1,31 @@
+'use client';
 
-import { currentUser } from "@clerk/nextjs/server";
-import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import ProfileCard from "@/components/ProfileCard";
-import { notFound, redirect } from "next/navigation";
-import { Profile } from "@/types/type";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import ProfileCard from '@/components/ProfileCard';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { Profile } from '@/types/type';
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
+export default function ProfilePageClient() {
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const [profile, setProfile] = useState<Profile | null>(null);
 
-export default async function Page({params}: Props) {
+  useEffect(() => {
+    if (!id) return;
 
-  const {id} =await  params;
-  const user = await currentUser();
-  const snapShot = await getDoc(doc(db, "profiles", id));
+    const fetchProfile = async () => {
+      const snap = await getDoc(doc(db, 'profiles', id as string));
+      if (snap.exists()) {
+        setProfile(snap.data() as Profile);
+      }
+    };
 
-  if (!snapShot.exists()) {
-    if (user?.id === id) {
-      redirect("/dashboard/profile/edit");
-    } else {
-      notFound();
-    }
-  }
+    fetchProfile();
+  }, [id]);
 
-  const profile = snapShot.data() as Profile;
-  const canEdit = user?.id === profile.userId;
+  if (!profile) return <p>Loading...</p>;
 
-  return <ProfileCard profile={profile} canEdit={canEdit} />;
+  return <ProfileCard profile={profile} canEdit={false} />;
 }

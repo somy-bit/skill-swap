@@ -30,9 +30,9 @@ export async function GET(req: NextRequest, context:any) {
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  context:any
 ) {
-  const { userId } = params
+  const { userId } = context.params
 
   try {
     const body = await req.json()

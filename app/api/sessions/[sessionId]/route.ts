@@ -191,7 +191,7 @@ export async function PATCH(req: NextRequest, context:any) {
             }
 
             // Cancel Zoom meeting if exists
-            if (session.zoom.meetingId) {
+            if (session.zoom?.meetingId) {
                 try {
                     await deleteZoomMeeting(session.zoom.meetingId);
                 } catch (err) {
@@ -246,7 +246,7 @@ export async function DELETE(req: Request, context:any) {
   const sessionRef = adminDb.collection("sessions").doc(id);
   const sessionSnap = await sessionRef.get();
 
-  if (!sessionSnap.exists) return new Response("Not found", { status: 404 });
+  if (!sessionSnap.exists) return new NextResponse("Not found", { status: 404 });
 
   const sessionData = sessionSnap.data() as Session;
 
